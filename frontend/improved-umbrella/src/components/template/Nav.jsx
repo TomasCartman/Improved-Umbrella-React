@@ -5,11 +5,15 @@ import { Link } from 'react-router-dom'
 export default props =>
     <aside className="menu-area">
         <nav className="menu">
+            <br/>
             <Link to="/">
-                <i className="fa "></i> First
+                <i className="fa "></i> Ultimos gastos
             </Link>
             <Link to="/">
-                <i className="fa "></i> Second
+                <i className="fa "></i> Todos os gastos
+            </Link>
+            <Link to="/signup">
+                <i className="fa "></i> Adiconar gasto
             </Link>
         </nav>
     </aside>

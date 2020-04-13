@@ -1,0 +1,79 @@
+.mainDiv {
+    background-color: #FFF;
+    box-shadow: 0px 0px 15px #0004;
+    border-radius: 20px;
+    padding: 4%;
+    margin-top: 5%;
+}
+
+/* Layout em grid*/
+
+.appLogout {
+    margin: 0px;
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows:
+        var(--header-height)
+        1fr;
+    grid-template-areas:
+        "header"
+        "content";
+    height: 100vh;
+    background: #F5F5F5;
+}
+
+header.header {
+    grid-area: header;
+}
+
+main.content {
+    grid-area: content;
+}
+
+p {
+    color: rgb(100, 95, 95);
+}
+
+p:hover, p:link, p:active {
+    text-decoration: none;
+    color: rgb(160, 156, 156);
+}
+
+a:hover {
+    text-decoration: none;
+}
+
+.title {
+    text-align: left;
+}
+
+@media(max-width: 768px) {
+    .appLogout {
+        grid-template-rows:
+            var(--header-height)
+            var(--menu-top-height)
+            1fr
+            var(--footer-height);
+        grid-template-columns: var(--aside-width) 1fr;
+        grid-template-areas:
+            "header header"
+            "menu menu"
+            "content content"
+            "footer footer";
+    }
+}
+
+@media(max-width: 576px) {
+    .appLogout {
+        grid-template-rows:
+            var(--menu-top-height)
+            1fr
+            var(--footer-height);
+        grid-template-columns: 1fr;
+        grid-template-areas:
+            "header"
+            "menu"
+            "content"
+            "footer";
+    }
+}

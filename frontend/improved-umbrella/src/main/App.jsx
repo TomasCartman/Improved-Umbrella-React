@@ -10,9 +10,9 @@ import Footer from '../components/template/Footer'
 
 export default props =>
     <BrowserRouter>
-        <div className="app">
-            <Nav />
+        <div className="">
+            {   /* <Nav /> */   }
             <Routes />
-            <Footer />
+            {   /* <Footer /> */  }
         </div>
     </BrowserRouter>  
