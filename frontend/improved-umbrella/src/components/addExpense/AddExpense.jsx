@@ -11,7 +11,13 @@ const headerProps = {
 }
 
 const initialState = {
-    subexpensesCounter: []
+    expense: {
+        expense_name: "",
+        expense_value: 0,
+        expense_localization: "",
+        expense_date: null
+    },
+    subexpenses: []
 }
 
 export default class AddExpense extends Component {
@@ -20,6 +26,73 @@ export default class AddExpense extends Component {
 
     componentDidMount() {
         document.title = 'Improved Umbrella'
+    }
+
+    addExpenseToDB() {
+        console.log(this.state.expense)
+        console.log(this.state.subexpenses)
+    }
+
+    updateField(event) {
+        const expense = { ...this.state.expense }
+        expense[event.target.name] = event.target.value
+        this.setState({ expense })
+    }
+
+    updateSubexpenseName(event, position) {
+        let subexpenses = [ ...this.state.subexpenses ]
+        let expense = { ...this.state.expense }
+        subexpenses[position].item_name = event.target.value
+        this.setState({ subexpenses })
+    }
+
+    updateSubexpenseValue(event, position) {
+        let subexpenses = [ ...this.state.subexpenses ]
+        let expense = { ...this.state.expense }
+        let subexpense_value = event.target.value.trim()
+        let subexpenseValueStateString = subexpenses[position].item_value.toString()
+
+        if(subexpense_value.charAt(subexpense_value.length -1) === ','){
+            subexpense_value = subexpense_value.replace(',', '.')
+        }
+        if(subexpenseValueStateString.includes('.') && subexpense_value.charAt(subexpense_value.length -1) === '.') {
+            subexpense_value = subexpense_value.substring(0, subexpense_value.length - 1)
+        }
+        
+        let subexpense_valueNumber = Number(subexpense_value)
+
+        if(!isNaN(subexpense_valueNumber) && subexpense_value !== "") {
+            subexpenses[position].item_value = subexpense_value
+            let total_value = 0
+            subexpenses.map(row => {
+                let value = Number(row.item_value) * Number(row.item_amount)
+                total_value += value
+            })
+            expense.expense_value = total_value.toFixed(2)
+        }
+        
+        this.setState({ subexpenses })
+        this.setState({ expense })
+    }
+
+    updateSubexpenseAmount(event, position) {
+        let subexpenses = [ ...this.state.subexpenses ]
+        let expense = { ...this.state.expense }
+        let subexpense_amount = event.target.value.trim()
+        let subexpense_amountNumber = parseInt(subexpense_amount)
+
+        if(!isNaN(subexpense_amountNumber) && subexpense_amount !== "") {
+            subexpenses[position].item_amount = subexpense_amount
+            let total_value = 0
+            subexpenses.map(row => {
+                let value = Number(row.item_value) * Number(row.item_amount)
+                total_value += value
+            })
+            expense.expense_value = total_value.toFixed(2)
+        }
+
+        this.setState({ subexpenses })
+        this.setState({ expense })
     }
 
     renderAddExpenseRow() {
@@ -33,20 +106,45 @@ export default class AddExpense extends Component {
                         <div className="col-2">
                             <label>Valor total:</label>
                         </div>
+                        <div className="col-2">
+                            <label>Localização:</label>
+                        </div>
+                        <div className="col-2">
+                            <label>Data:</label>
+                        </div>
                     </div>
                     
                     <div className="row">
                         <div className="col-6">
                             <input type="text"
-                                id="input-expense"
+                                name="expense_name"
                                 className="form-control"
-                                placeholder="Digite o nome do gasto principal" />
+                                placeholder="Digite o nome do gasto principal"
+                                value={this.state.expense.expense_name}
+                                onChange={e => this.updateField(e)} />
                         </div>
                         <div className="col-2">
                             <input type="text"
-                                id="input-expense"
+                                name="expense_value"
                                 className="form-control"
-                                placeholder="Valor" />
+                                placeholder="Valor"
+                                value={this.state.expense.expense_value}
+                                onChange={e => this.updateField(e)} />
+                        </div>
+                        <div className="col-2">
+                            <input type="text"
+                                name="expense_localization"
+                                className="form-control"
+                                placeholder="Localização"
+                                value={this.state.expense.expense_localization}
+                                onChange={e => this.updateField(e)} />
+                        </div>
+                        <div className="col-2">
+                            <input type="date"
+                                name="expense_date"
+                                className="form-control"
+                                placeholder="Data"
+                                onChange={e => this.updateField(e)} />
                         </div>
                     </div>    
                 </form>
@@ -55,13 +153,21 @@ export default class AddExpense extends Component {
     }
 
     renderAddNewSubexpensesButton() {
-        const subexpensesCounter = [ ...this.state.subexpensesCounter ]
-        subexpensesCounter.push(subexpensesCounter.length + 1)
+        const subexpenses = [ ...this.state.subexpenses ]
+        const subexpense = {
+            "item_name": "",
+            "item_value": 0,
+            "item_amount": 1,
+            "item_id": subexpenses.length
+        }
         return (
             <React.Fragment>
                 <button type="button" className="btn btn-warning" 
                     style={{"marginLeft": "2%"}}
-                    onClick={() => this.setState({ subexpensesCounter })} >
+                    onClick={() => {
+                        subexpenses.push(subexpense)
+                        this.setState({ subexpenses })
+                    }} >
                         <i className="fa fa-plus"></i>
                 </button>
             </React.Fragment>
@@ -72,7 +178,8 @@ export default class AddExpense extends Component {
         return (
             <React.Fragment>
                 <br/>
-                <button type="button" className="btn btn-success">
+                <button type="button" className="btn btn-success"
+                    onClick={() => this.addExpenseToDB()}>
                     Adicionar gasto
                 </button>
             </React.Fragment>
@@ -80,13 +187,11 @@ export default class AddExpense extends Component {
     }
 
     renderSubexpensesRows() {
-        const numberOfRows = [ ...this.state.subexpensesCounter ]
-        let i = 0
-        console.log(numberOfRows)
-        return numberOfRows.map(row => {
-            i += 1
+        const subexpenses = [ ...this.state.subexpenses ]
+        return subexpenses.map(row => {
+            console.log(row)
             return (
-                <React.Fragment key={i}>
+                <React.Fragment key={row.item_id}>
                     <form className="form-group" style={{"marginLeft": "2%"}}>
                         <div className="row">
                             <div className="col-6">
@@ -95,19 +200,34 @@ export default class AddExpense extends Component {
                             <div className="col-2">
                                 <label>Valor do subgasto: </label>
                             </div>
+                            <div className="col-2">
+                                <label>Quantidade: </label>
+                            </div>
                         </div>
                         <div className="row">
                             <div className="col-6">
                                 <input type="text"
-                                    id="input-expense"
+                                    name="item_name"
                                     className="form-control"
-                                    placeholder="Digite o nome do subgasto" />
+                                    placeholder="Digite o nome do subgasto"
+                                    value={this.state.subexpenses[row.item_id].item_name}
+                                    onChange={e => this.updateSubexpenseName(e, row.item_id)} />
                             </div>
                             <div className="col-2">
                                 <input type="text"
-                                        id="input-expense"
+                                        name="item_value"
                                         className="form-control"
-                                        placeholder="Valor" />
+                                        placeholder="Valor" 
+                                        value={this.state.subexpenses[row.item_id].item_value}
+                                        onChange={e => this.updateSubexpenseValue(e, row.item_id)} />
+                            </div>
+                            <div className="col-2">
+                                <input type="text"
+                                        name="item_amount"
+                                        className="form-control"
+                                        placeholder="Quantidade"
+                                        value={this.state.subexpenses[row.item_id].item_amount}
+                                        onChange={e => this.updateSubexpenseAmount(e, row.item_id)} />
                             </div>
                         </div>    
                     </form>

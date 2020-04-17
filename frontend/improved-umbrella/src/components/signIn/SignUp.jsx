@@ -20,7 +20,8 @@ const initialState = {
         username: "",
         password: "",
         confirmPassword: ""
-    }
+    },
+    msg: ""
 }
 
 export default class SignUp extends Component {
@@ -41,26 +42,30 @@ export default class SignUp extends Component {
     validate() { // THIS IS NOT WORKING AS IT SHOULD
         const user = { ...this.state.user }
 
-        if(user.name.trim() < 6) {
+        if(user.name.trim().length < 6) {
             console.log('Nome muito pequeno!')
             return false
-        } else if(user.name.trim() > 100) {
+        } else if(user.name.trim().length > 100) {
             console.log('Nome muito longo!')
             return false
         }
     
-        if(user.username.trim() < 4) {
+        if(user.username.trim().length < 4) {
             console.log('Nome de usuário muito pequeno!')
             return false
-        } else if(user.username.trim() > 30) {
+        } else if(user.username.trim().length > 30) {
             console.log('Nome de usuário muito longo!')
+            return false
+        } else if(user.username.trim().search(' ') !== -1){
+            console.log(user.username.trim().search(' '))
+            console.log('Nome de usuário não deve conter espaços')
             return false
         }
     
-        if(user.password.trim() < 6) {
+        if(user.password.trim().length < 6) {
             console.log('Senha muito curta!')
             return false
-        } else if(user.password.trim() > 30) {
+        } else if(user.password.trim().length > 30) {
             console.log('Senha muito longa!')
             return false
         }
@@ -77,13 +82,14 @@ export default class SignUp extends Component {
     register() {
         if(this.validate()) {
             const user = { ...this.state.user }
+            console.log(user)
             axios.post(backendLink + '/users', user)
                 .then(res => {
-                    console.log(res)
                     if(res.status === 204) window.location = '/'
                 })
                 .catch(err => {
-                    console.log('Ocorreu um erro: ' + err)
+                    console.log(err)
+                    this.setState({ msg: 'Usuário já cadastrado'})
                 })
         }     
     }
@@ -96,6 +102,7 @@ export default class SignUp extends Component {
                         <h3>Cadastro</h3>
                     </div>
                     <br/>
+                    <h5 style={{color: "red"}}>{this.state.msg}</h5>
                     <form className="form-group">
                         <div className="col-12">
                             <div className="row">

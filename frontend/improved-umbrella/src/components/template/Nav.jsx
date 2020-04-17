@@ -9,7 +9,7 @@ export default props =>
             <Link to="/">
                 <i className="fa "></i> Ultimos gastos
             </Link>
-            <Link to="/">
+            <Link to="/allExpenses">
                 <i className="fa "></i> Todos os gastos
             </Link>
             <Link to="/signup">
