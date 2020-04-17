@@ -5,14 +5,10 @@ import React from 'react'
 import { BrowserRouter } from 'react-router-dom'
 
 import Routes from './Routes'
-import Nav from '../components/template/Nav'
-import Footer from '../components/template/Footer'
 
 export default props =>
     <BrowserRouter>
         <div className="">
-            {   /* <Nav /> */   }
             <Routes />
-            {   /* <Footer /> */  }
         </div>
     </BrowserRouter>  
