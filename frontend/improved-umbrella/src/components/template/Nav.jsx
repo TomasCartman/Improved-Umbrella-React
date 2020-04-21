@@ -15,5 +15,10 @@ export default props =>
             <Link to="/signup">
                 <i className="fa "></i> Adiconar gasto
             </Link>
+            <Link to="login">
+                {() => localStorage.setItem('token', '')}
+                {() => localStorage.clear()}
+                <i className="fa "></i> Sair
+            </Link>
         </nav>
     </aside>

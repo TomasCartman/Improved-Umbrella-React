@@ -47,9 +47,12 @@ export default class SignUp extends Component {
         axios.post(backendLink + '/signin', user)
             .then(result => {
                 localStorage.setItem('token', result.data.token)
+                localStorage.setItem('username', result.data.id)
                 localStorage.setItem('name', result.data.name)
                 localStorage.setItem('username', result.data.username)
-                this.setState({ redirect: true })
+                localStorage.setItem('username', result.data.iat)
+                localStorage.setItem('username', result.data.exp)
+                this.setState({ redirect: true }) 
             })
             .catch(err => {
                 console.log(err)
@@ -97,8 +100,7 @@ export default class SignUp extends Component {
     }
 
     render() {
-        const redirect = { ...this.state.redirect }
-        if(redirect) return <Redirect to="/" />
+        if(localStorage.getItem('token')) return <Redirect to="/" />
 
         return (
            <React.Fragment>

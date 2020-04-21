@@ -18,6 +18,17 @@ export default class AddExpense extends Component {
         document.title = 'Improved Umbrella'
     }
 
+    renderWelcomeMensage() {
+        const name = localStorage.getItem('name')
+        return (
+            <React.Fragment>
+                <div className="row">
+                    Bem vindo, {name}!
+                </div>
+            </React.Fragment>
+        )
+    }
+
     renderExpenses() {
         let i = 0
         return itemsExemple.map(item => {
@@ -69,6 +80,9 @@ export default class AddExpense extends Component {
                 <div className="app">
                     <Nav />
                     <Main { ...headerProps }>
+                        <div className="container-fluid">
+                            {this.renderWelcomeMensage()}
+                        </div>
                         <div className="container-fluid">
                             {this.renderExpenses()}
                         </div>
