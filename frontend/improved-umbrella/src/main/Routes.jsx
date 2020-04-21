@@ -22,6 +22,6 @@ export default props =>
             <Route exact path="/login"
                 render={(props) => <Login { ...props } isAuthed={true} />} />
 
-            <Redirect from="*" to="/" />
+            <Redirect from="*" to="/login" />
         </Switch>
     </React.Fragment>

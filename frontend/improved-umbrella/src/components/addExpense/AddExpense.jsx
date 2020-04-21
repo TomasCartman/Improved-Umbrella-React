@@ -1,4 +1,5 @@
 import React, { Component } from 'react'
+import { Link, Redirect } from 'react-router-dom'
 import Main from '../template/Main'
 import Nav from '../template/Nav'
 import axios from 'axios'
@@ -126,6 +127,8 @@ export default class AddExpense extends Component {
     }
 
     renderAddExpenseRow() {
+        if(!localStorage.getItem('token')) return <Redirect to="/" />
+
         return (
             <React.Fragment>
                 <form className="form-group">
