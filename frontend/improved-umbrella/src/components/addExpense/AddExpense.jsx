@@ -5,6 +5,9 @@ import axios from 'axios'
 
 import './AddExpense.css'
 
+// const backendLink = 'https://improved-umbrella.herokuapp.com'
+const backendLink = 'http://localhost:3001'
+
 const headerProps = {
     icon: 'umbrella',
     title: 'Improved Umbrella'
@@ -29,8 +32,35 @@ export default class AddExpense extends Component {
     }
 
     addExpenseToDB() {
-        console.log(this.state.expense)
-        console.log(this.state.subexpenses)
+        let expense = { ...this.state.expense }
+        let subexpenses = [ ...this.state.subexpenses ]
+        expense.expense_value = Number(expense.expense_value)
+        expense.username = "TomasCartman"
+
+        axios.post(backendLink + '/expenses', expense) // Axios request to add expense
+            .then(res => {
+                if(subexpenses.length > 0) {
+                    subexpenses.map(subexpense => {
+                        subexpense.item_value = Number(subexpense.item_value)
+                        subexpense.item_amount = Number(subexpense.item_amount)
+                        delete subexpense.item_id
+                        subexpense.expense_id = Number(res.data[0].id)
+                    })
+                    
+                    axios.post(backendLink + '/items', subexpenses) // Axios request to add subexpenses
+                    .then(res => {
+                        // MENSAGEM DE SUCESSO
+                    })
+                    .catch(err => {
+                        console.log('Subexpense post request error -> ' + err)
+                    })
+               } else {
+                   // MSG DE SUCESSO DE EXPENSE
+               }     
+            })
+            .catch(err => {
+                console.log('Expense post request error -> ' + err)
+            })
     }
 
     updateField(event) {

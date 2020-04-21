@@ -81,10 +81,12 @@ export default class SignUp extends Component {
 
     register() {
         if(this.validate()) {
+            let inMemoryToken
             const user = { ...this.state.user }
             console.log(user)
             axios.post(backendLink + '/users', user)
                 .then(res => {
+                    //localStorage.setItem('myCat', 'Tom')
                     if(res.status === 204) window.location = '/'
                 })
                 .catch(err => {
