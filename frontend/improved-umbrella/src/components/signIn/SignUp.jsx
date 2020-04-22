@@ -1,5 +1,5 @@
 import React, { Component } from 'react'
-import { Link } from 'react-router-dom'
+import { Link, Redirect } from 'react-router-dom'
 import Header from '../template/Header'
 import axios from 'axios'
 
@@ -21,7 +21,8 @@ const initialState = {
         password: "",
         confirmPassword: ""
     },
-    msg: ""
+    msg: "",
+    redirect: false
 }
 
 export default class SignUp extends Component {
@@ -85,9 +86,21 @@ export default class SignUp extends Component {
             const user = { ...this.state.user }
             console.log(user)
             axios.post(backendLink + '/users', user)
-                .then(res => {
-                    console.log(res)
-                    
+                .then(result => {
+                    console.log(result)
+                    axios.post(backendLink + '/signin', user)
+                        .then(result => {
+                            localStorage.setItem('token', result.data.token)
+                            localStorage.setItem('username', result.data.id)
+                            localStorage.setItem('name', result.data.name)
+                            localStorage.setItem('username', result.data.username)
+                            localStorage.setItem('iat', result.data.iat)
+                            localStorage.setItem('exp', result.data.exp)
+                            this.setState({ redirect: true }) 
+                        })
+                        .catch(err => {
+                            console.log(err)
+                        })
                 })
                 .catch(err => {
                     console.log(err)
@@ -162,6 +175,8 @@ export default class SignUp extends Component {
     }
 
     render() {
+        if(localStorage.getItem('token')) return <Redirect to="/allExpenses" />
+
         return (
            <React.Fragment>
                <div className="appLogout">
