@@ -47,6 +47,12 @@ export default class AddExpense extends Component {
         await axios.post(backendLink + '/allexpenses', {
             username: localStorage.getItem('username')
         }).then(result => {
+            result.data.map(res => {
+                if(res.expense_date) {
+                    res.expense_date = res.expense_date.substring(0, 10)
+                    // SEPARAR A DATA CERTINHO PARA O PADRÃO BR
+                }
+            })
             this.setState({ expenses: result.data })
             const expenses = [ ...this.state.expenses ]
             expenses.map(expense => {
@@ -68,25 +74,33 @@ export default class AddExpense extends Component {
     }
 
     renderChartTest() {
+        const expenses = [ ...this.state.expenses ]
+        let dates = []
+        let values = []
+        expenses.map(expense => {
+            if(expense.expense_date)
+                dates.push(expense.expense_date)
+                values.push(expense.expense_value)
+        })
         const data = {
-            labels: ['January', 'February', 'March', 'April', 'May', 'June', 'July'],
+            labels: dates,
             datasets: [
               {
-                label: 'My First dataset',
+                label: 'Todas as despesas',
                 backgroundColor: 'rgba(255,99,132,0.2)',
                 borderColor: 'rgba(255,99,132,1)',
                 borderWidth: 1,
                 hoverBackgroundColor: 'rgba(255,99,132,0.4)',
                 hoverBorderColor: 'rgba(255,99,132,1)',
                 cubicInterpolationMode: 'monotone',
-                data: [65, 59, 80, 81, 56, 55, 40]
+                data: values
               }
             ]
           };
         return (
-			<div>
+			<div >
 				<hr />
-				<Line data={data} width={"50%"} height={"10%"} />
+				<Line data={data} width={"50%"} height={"15%"} />
                 <br/>
 			</div>
 		)
@@ -111,22 +125,19 @@ export default class AddExpense extends Component {
             return (
                 <React.Fragment key={expense.id}>
                     <hr/>
-                    <div className="row">
-                        <h3>Gasto {i}</h3>
-                    </div>
                     <br/>
                     <div className="row">
                         <div className="col-6">
-                            <h5>Nome:</h5>
+                            <h5><strong>Nome:</strong></h5>
                         </div>
                         <div className="col-2">
-                            <h5>Valor:</h5>
+                            <h5><strong>Valor:</strong></h5>
                         </div>
                         <div className="col-2">
-                            <h5>Localização:</h5>
+                            <h5><strong>Localização:</strong></h5>
                         </div>
                         <div className="col-2">
-                            <h5>Data:</h5>
+                            <h5><strong>Data:</strong></h5>
                         </div>
                     </div>      
                     <div className="row">
@@ -158,18 +169,18 @@ export default class AddExpense extends Component {
                     <React.Fragment key={item.id}>
                         <br/>
                         <div className="row">
-                            
+
                             <div className="offset-1 col-4">
-                                <h6>Nome:</h6>
+                                <h6><strong>Nome:</strong></h6>
                             </div>
                             <div className="col-2">
-                                <h6>Valor:</h6>
+                                <h6><strong>Valor:</strong></h6>
                             </div>
                             <div className="col-2">
-                                <h6>Quantidade:</h6>
+                                <h6><strong>Quantidade:</strong></h6>
                             </div>
                             <div className="col-2">
-                                <h6>Valor total:</h6>
+                                <h6><strong>Valor total:</strong></h6>
                             </div>
                         </div>
                         <div className="row">

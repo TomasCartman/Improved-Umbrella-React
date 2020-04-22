@@ -15,8 +15,8 @@ export default props =>
             <Link to="/">
                 <i className="fa "></i> Adiconar gasto
             </Link>
-            <Link to="/login">
-                <i className="fa " onClick={() => localStorage.clear()}></i> Sair
+            <Link to="/login" onClick={() => localStorage.clear()}>
+                <i className="fa "></i> Sair
             </Link>
         </nav>
     </aside>

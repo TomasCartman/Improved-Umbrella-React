@@ -16,6 +16,8 @@ const headerProps = {
 
 const initialState = {
     expense: {
+        username: "",
+        expense_type: 0,
         expense_name: "",
         expense_value: 0,
         expense_localization: "",
@@ -36,7 +38,7 @@ export default class AddExpense extends Component {
         let expense = { ...this.state.expense }
         let subexpenses = [ ...this.state.subexpenses ]
         expense.expense_value = Number(expense.expense_value)
-        expense.username = "TomasCartman"
+        expense.username = localStorage.getItem('username')
 
         axios.post(backendLink + '/expenses', expense) // Axios request to add expense
             .then(res => {
