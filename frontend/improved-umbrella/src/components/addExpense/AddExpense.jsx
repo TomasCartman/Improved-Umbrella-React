@@ -156,8 +156,6 @@ export default class AddExpense extends Component {
     }
 
     renderAddExpenseRow() {
-        if(!localStorage.getItem('token')) return <Redirect to="/" />
-
         return (
             <React.Fragment>
                 <form className="form-group">
@@ -312,6 +310,8 @@ export default class AddExpense extends Component {
     }
 
     render() {
+        if(!localStorage.getItem('token')) return <Redirect to="/login" />
+        
         return (
             <React.Fragment>
                 <div className="app">

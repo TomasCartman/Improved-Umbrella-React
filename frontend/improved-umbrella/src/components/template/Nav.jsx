@@ -12,7 +12,7 @@ export default props =>
             <Link to="/allExpenses">
                 <i className="fa "></i> Todos os gastos
             </Link>
-            <Link to="/">
+            <Link to="/addExpense">
                 <i className="fa "></i> Adiconar gasto
             </Link>
             <Link to="/login" onClick={() => localStorage.clear()}>

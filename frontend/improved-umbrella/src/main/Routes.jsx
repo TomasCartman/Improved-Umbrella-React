@@ -10,7 +10,7 @@ import Login from '../components/signIn/Login'
 export default props =>
     <React.Fragment>
         <Switch>
-            <Route exact path="/"
+            <Route exact path="/addExpense"
                 render={(props) => <AddExpense { ...props } isAuthed={true} />} />
             
             <Route exact path="/allExpenses"
