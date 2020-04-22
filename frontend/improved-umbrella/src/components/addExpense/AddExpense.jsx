@@ -66,14 +66,14 @@ export default class AddExpense extends Component {
                     axios.post(backendLink + '/items', subexpenses) // Axios request to add subexpenses
                     .then(res => {
                         // MENSAGEM DE SUCESSO
-                        this.setState({ initialState })
+                        this.setState({ ...initialState })
                     })
                     .catch(err => {
                         console.log('Subexpense post request error -> ' + err)
                     })
                } else {
                    // MSG DE SUCESSO DE EXPENSE
-                   this.setState({ initialState })
+                   this.setState({ ...initialState })
                }     
             })
             .catch(err => {
@@ -311,7 +311,7 @@ export default class AddExpense extends Component {
 
     render() {
         if(!localStorage.getItem('token')) return <Redirect to="/login" />
-        
+
         return (
             <React.Fragment>
                 <div className="app">
