@@ -7,6 +7,8 @@ import axios from 'axios'
 import { Line } from 'react-chartjs-2';
 
 
+// const backendLink = 'https://improved-umbrella.herokuapp.com'
+const backendLink = 'http://localhost:3001'
 
 //import './Expense.css'
 
@@ -26,10 +28,43 @@ const headerProps = {
     title: 'Improved Umbrella'
 }
 
+const initialState = {
+    expenses: [],
+    items: []
+}
+
 export default class AddExpense extends Component {
+
+    state = { ...initialState }
 
     componentDidMount() {
         document.title = 'Improved Umbrella'
+        console.log(localStorage.getItem('username'))
+        this.getExpenses()
+    }
+
+    async getExpenses() {
+        await axios.post(backendLink + '/allexpenses', {
+            username: localStorage.getItem('username')
+        }).then(result => {
+            this.setState({ expenses: result.data })
+            const expenses = [ ...this.state.expenses ]
+            expenses.map(expense => {
+                this.getItems(expense.id)
+            })
+        }).catch(err => console.log(err))
+    }
+
+    async getItems(expense_id) {
+        await axios.post(backendLink + '/allitems', {
+            expense_id: expense_id
+        }).then(result => {
+            let items = [ ...this.state.items ]
+            result.data.map(item => {
+                items.push(item)
+            })
+            this.setState({ items })
+        }).catch(err => console.log(err))
     }
 
     renderChartTest() {
@@ -70,7 +105,8 @@ export default class AddExpense extends Component {
 
     renderExpenses() {
         let i = 0
-        return expensesExemple.map(expense => {
+        const expenses = [ ...this.state.expenses ]
+        return expenses.map(expense => {
             i += 1
             return (
                 <React.Fragment key={expense.id}>
@@ -115,10 +151,11 @@ export default class AddExpense extends Component {
     }
 
     renderSubexpenses(expense_id) {
-        return itemsExemple.map(item => {
+        const items = [ ...this.state.items ]
+        return items.map(item => {
             if(item.expense_id === expense_id){
                 return (
-                    <React.Fragment>
+                    <React.Fragment key={item.id}>
                         <br/>
                         <div className="row">
                             

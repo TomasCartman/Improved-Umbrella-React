@@ -50,8 +50,8 @@ export default class SignUp extends Component {
                 localStorage.setItem('username', result.data.id)
                 localStorage.setItem('name', result.data.name)
                 localStorage.setItem('username', result.data.username)
-                localStorage.setItem('username', result.data.iat)
-                localStorage.setItem('username', result.data.exp)
+                localStorage.setItem('iat', result.data.iat)
+                localStorage.setItem('exp', result.data.exp)
                 this.setState({ redirect: true }) 
             })
             .catch(err => {
@@ -100,7 +100,7 @@ export default class SignUp extends Component {
     }
 
     render() {
-        if(localStorage.getItem('token')) return <Redirect to="/" />
+        if(localStorage.getItem('token')) return <Redirect to="/allExpenses" />
 
         return (
            <React.Fragment>

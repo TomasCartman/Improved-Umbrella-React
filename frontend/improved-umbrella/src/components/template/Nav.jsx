@@ -6,19 +6,17 @@ export default props =>
     <aside className="menu-area">
         <nav className="menu">
             <br/>
-            <Link to="/">
+            <Link to="/nada">
                 <i className="fa "></i> Ultimos gastos
             </Link>
             <Link to="/allExpenses">
                 <i className="fa "></i> Todos os gastos
             </Link>
-            <Link to="/signup">
+            <Link to="/">
                 <i className="fa "></i> Adiconar gasto
             </Link>
-            <Link to="login">
-                {() => localStorage.setItem('token', '')}
-                {() => localStorage.clear()}
-                <i className="fa "></i> Sair
+            <Link to="/login">
+                <i className="fa " onClick={() => localStorage.clear()}></i> Sair
             </Link>
         </nav>
     </aside>
