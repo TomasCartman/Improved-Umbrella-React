@@ -97,7 +97,7 @@ export default class AddExpense extends Component {
     updateSubexpenseValue(event, position) {
         let subexpenses = [ ...this.state.subexpenses ]
         let expense = { ...this.state.expense }
-        let subexpense_value = event.target.value.trim()
+        let subexpense_value = event.target.value.trim().toString()
         let subexpenseValueStateString = subexpenses[position].item_value.toString()
 
         if(subexpense_value.charAt(subexpense_value.length -1) === ','){
@@ -109,8 +109,16 @@ export default class AddExpense extends Component {
         
         let subexpense_valueNumber = Number(subexpense_value)
 
-        if(!isNaN(subexpense_valueNumber) && subexpense_value !== "") {
-            subexpenses[position].item_value = subexpense_value
+        if(!isNaN(subexpense_valueNumber) || subexpense_value === "" || subexpense_value.charAt(subexpense_value.length -1) === ".") {
+            if(subexpense_value === "") {
+                subexpense_value = 0
+                subexpenses[position].item_value = subexpense_value
+            } else if(subexpense_value.charAt(subexpense_value.length -1) === ".") {
+                subexpenses[position].item_value = subexpense_value
+            } else {
+                subexpenses[position].item_value = Number(subexpense_value)
+            }
+            
             let total_value = 0
             subexpenses.map(row => {
                 let value = Number(row.item_value) * Number(row.item_amount)
@@ -128,9 +136,13 @@ export default class AddExpense extends Component {
         let expense = { ...this.state.expense }
         let subexpense_amount = event.target.value.trim()
         let subexpense_amountNumber = parseInt(subexpense_amount)
-
-        if(!isNaN(subexpense_amountNumber) && subexpense_amount !== "") {
-            subexpenses[position].item_amount = subexpense_amount
+        if(!isNaN(subexpense_amountNumber) || subexpense_amount === "") {
+            if(subexpense_amount === ""){
+                subexpense_amount = 0
+                subexpenses[position].item_amount = subexpense_amount
+            } else {
+                subexpenses[position].item_amount = parseInt(subexpense_amount)
+            }
             let total_value = 0
             subexpenses.map(row => {
                 let value = Number(row.item_value) * Number(row.item_amount)
