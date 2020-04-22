@@ -86,8 +86,8 @@ export default class SignUp extends Component {
             console.log(user)
             axios.post(backendLink + '/users', user)
                 .then(res => {
-                    //localStorage.setItem('myCat', 'Tom')
-                    if(res.status === 204) window.location = '/'
+                    console.log(res)
+                    
                 })
                 .catch(err => {
                     console.log(err)

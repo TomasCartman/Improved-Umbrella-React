@@ -40,11 +40,24 @@ export default class AddExpense extends Component {
         expense.expense_value = Number(expense.expense_value)
         expense.username = localStorage.getItem('username')
 
+        if(!expense.expense_name || !expense.expense_value) {
+            // Mensagem de erro
+            return
+        }
+        let subespensesProvisory = [ ...subexpenses ]
+        subexpenses.map(subexpense => {
+            if(!subexpense.item_name || !subexpense.item_value || !subexpense.item_amount) {
+                subespensesProvisory.splice(subexpense.item_id, 1)
+            }
+        })
+        subexpenses = [ ...subespensesProvisory ]
+        
+        
         axios.post(backendLink + '/expenses', expense) // Axios request to add expense
             .then(res => {
                 if(subexpenses.length > 0) {
                     subexpenses.map(subexpense => {
-                        subexpense.item_value = Number(subexpense.item_value)
+                        subexpense.item_value = Number(subexpense.item_value).toFixed(2)
                         subexpense.item_amount = Number(subexpense.item_amount)
                         delete subexpense.item_id
                         subexpense.expense_id = Number(res.data[0].id)
@@ -53,12 +66,14 @@ export default class AddExpense extends Component {
                     axios.post(backendLink + '/items', subexpenses) // Axios request to add subexpenses
                     .then(res => {
                         // MENSAGEM DE SUCESSO
+                        this.setState({ initialState })
                     })
                     .catch(err => {
                         console.log('Subexpense post request error -> ' + err)
                     })
                } else {
                    // MSG DE SUCESSO DE EXPENSE
+                   this.setState({ initialState })
                }     
             })
             .catch(err => {
@@ -207,6 +222,19 @@ export default class AddExpense extends Component {
                 </button>
             </React.Fragment>
         )
+    }
+
+    renderRemoveSubexpenseButton() {
+        const subexpenses = [ ...this.state.subexpenses ]
+        // PENSAR NUMA FORMA DE REMOVER DE MODO QUE QUANDO ELE REMOVER DO ARRAY
+        // O TAMANHO DO ARRAY FIQUE SUFICIENTE PRA ELE NÃO TER PROBLEMA COM EXEMPLO:
+        // array[item_id] ALTERANDO O ITEM ERRADO OU 'ArrayOutOfRange'.
+        //
+        // COLOCAR UM OBJETO VAZIO TAMBÉM PODE GERAR O PROBLEMA DO SITE RENDERIZAR A ROW
+        // COMO SE ELA AINDA EXISTISSE.
+        //
+        // COLOCAR NULL NO LUGAR DO OBJETO TAMBÉM PODE GERAR O PROBLEMA DE EM ALGUM LUGAR
+        // O SITE TENTAR ACESSAR item.item_name (null.item_name), OQUE IRIA GERAR UM ERRO. 
     }
 
     renderAddExpenseButton() {
