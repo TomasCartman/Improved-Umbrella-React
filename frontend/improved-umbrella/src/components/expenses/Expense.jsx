@@ -73,6 +73,7 @@ export default class AddExpense extends Component {
         }).catch(err => console.log(err))
     }
 
+    // This chart is about all expenses per day
     renderChartTest() {
         const expenses = [ ...this.state.expenses ]
         let dates = []
@@ -209,7 +210,10 @@ export default class AddExpense extends Component {
                                     <h6>{(item.item_value * item.item_amount).toFixed(2)}</h6>
                                 </div>
                             </div>
-                            <br/> 
+                            <div class="offset-1 col-10">
+                                <hr/>
+                             </div>
+                             
                         </div>          
                     </React.Fragment>
                 )

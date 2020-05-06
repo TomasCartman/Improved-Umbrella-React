@@ -1,6 +1,8 @@
 :root {
     --bg-dark: #1A2F3A;
     --bg-light-white: #fcfcfc;
+    --bg-kinda-black: #242423;
+    --bg-kinda-purple: #22223b;
 
     --header-height: 60px;
     --menu-top-height: 70px;
