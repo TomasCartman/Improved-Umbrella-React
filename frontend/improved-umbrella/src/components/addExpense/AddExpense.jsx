@@ -116,7 +116,7 @@ export default class AddExpense extends Component {
             } else if(subexpense_value.charAt(subexpense_value.length -1) === ".") {
                 subexpenses[position].item_value = subexpense_value
             } else {
-                subexpenses[position].item_value = Number(subexpense_value)
+                subexpenses[position].item_value = Number(subexpense_value).toFixed(2)
             }
             
             let total_value = 0

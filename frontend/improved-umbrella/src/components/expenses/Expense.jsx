@@ -77,11 +77,20 @@ export default class AddExpense extends Component {
         const expenses = [ ...this.state.expenses ]
         let dates = []
         let values = []
+        
+        let pos
+
         expenses.map(expense => {
             if(expense.expense_date)
-                dates.push(expense.expense_date)
-                values.push(expense.expense_value)
+                pos = dates.indexOf(expense.expense_date)
+                if(pos !== -1){
+                    values[pos] = values[pos] + expense.expense_value
+                } else {
+                    dates.push(expense.expense_date)
+                    values.push(expense.expense_value)
+                }
         })
+
         const data = {
             labels: dates,
             datasets: [
@@ -127,11 +136,11 @@ export default class AddExpense extends Component {
                     <hr/>
                     <br/>
                     <div className="row">
-                        <div className="col-6">
+                        <div className="col-4">
                             <h5><strong>Nome:</strong></h5>
                         </div>
                         <div className="col-2">
-                            <h5><strong>Valor:</strong></h5>
+                            <h5><strong>Total:</strong></h5>
                         </div>
                         <div className="col-2">
                             <h5><strong>Localização:</strong></h5>
@@ -139,13 +148,16 @@ export default class AddExpense extends Component {
                         <div className="col-2">
                             <h5><strong>Data:</strong></h5>
                         </div>
+                        <div className="col-2">
+                            <button type="button" class="btn btn-primary">Subgastos</button>
+                        </div>
                     </div>      
                     <div className="row">
-                        <div className="col-6">
+                        <div className="col-4">
                             <h5>{expense.expense_name}</h5>
                         </div>
                         <div className="col-2">
-                            <h5>{expense.expense_value}</h5>
+                            <h5>{expense.expense_value.toFixed(2)}</h5>
                         </div>
                         <div className="col-2">
                             <h5>{expense.expense_localization}</h5>
@@ -167,37 +179,38 @@ export default class AddExpense extends Component {
             if(item.expense_id === expense_id){
                 return (
                     <React.Fragment key={item.id}>
-                        <br/>
-                        <div className="row">
-
-                            <div className="offset-1 col-4">
-                                <h6><strong>Nome:</strong></h6>
+                        <div>
+                            <br/>
+                            <div className="row">
+                                <div className="offset-1 col-4">
+                                    <h6><strong>Nome:</strong></h6>
+                                </div>
+                                <div className="col-2">
+                                    <h6><strong>Valor:</strong></h6>
+                                </div>
+                                <div className="col-2">
+                                    <h6><strong>Quantidade:</strong></h6>
+                                </div>
+                                <div className="col-2">
+                                    <h6><strong>Valor total:</strong></h6>
+                                </div>
                             </div>
-                            <div className="col-2">
-                                <h6><strong>Valor:</strong></h6>
+                            <div className="row">
+                                <div className="offset-1 col-4">
+                                    <h6>{item.item_name}</h6>
+                                </div>
+                                <div className="col-2">
+                                    <h6>{item.item_value.toFixed(2)}</h6>
+                                </div>
+                                <div className="col-2">
+                                    <h6>{item.item_amount}</h6>
+                                </div>
+                                <div className="col-2">
+                                    <h6>{(item.item_value * item.item_amount).toFixed(2)}</h6>
+                                </div>
                             </div>
-                            <div className="col-2">
-                                <h6><strong>Quantidade:</strong></h6>
-                            </div>
-                            <div className="col-2">
-                                <h6><strong>Valor total:</strong></h6>
-                            </div>
-                        </div>
-                        <div className="row">
-                            <div className="offset-1 col-4">
-                                <h6>{item.item_name}</h6>
-                            </div>
-                            <div className="col-2">
-                                <h6>{item.item_value}</h6>
-                            </div>
-                            <div className="col-2">
-                                <h6>{item.item_amount}</h6>
-                            </div>
-                            <div className="col-2">
-                                <h6>{item.item_value * item.item_amount}</h6>
-                            </div>
-                        </div>
-                        <br/>        
+                            <br/> 
+                        </div>          
                     </React.Fragment>
                 )
             }
