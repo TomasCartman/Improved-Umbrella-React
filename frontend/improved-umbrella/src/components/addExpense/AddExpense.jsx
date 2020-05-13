@@ -2,12 +2,11 @@ import React, { Component } from 'react'
 import { Link, Redirect } from 'react-router-dom'
 import Main from '../template/Main'
 import Nav from '../template/Nav'
+import { backendLink } from '../../config'
 import axios from 'axios'
 
 import './AddExpense.css'
 
-const backendLink = 'https://improved-umbrella.herokuapp.com'
-// const backendLink = 'http://localhost:3001'
 
 const headerProps = {
     icon: 'umbrella',

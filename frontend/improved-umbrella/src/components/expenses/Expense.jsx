@@ -2,13 +2,10 @@ import React, { Component } from 'react'
 import { Link, Redirect } from 'react-router-dom'
 import Main from '../template/Main'
 import Nav from '../template/Nav'
+import { backendLink } from '../../config'
 import axios from 'axios'
 
 import { Line } from 'react-chartjs-2';
-
-
-const backendLink = 'https://improved-umbrella.herokuapp.com'
-// const backendLink = 'http://localhost:3001'
 
 //import './Expense.css'
 
@@ -39,7 +36,6 @@ export default class AddExpense extends Component {
 
     componentDidMount() {
         document.title = 'Improved Umbrella'
-        console.log(localStorage.getItem('username'))
         this.getExpenses()
     }
 
@@ -116,6 +112,53 @@ export default class AddExpense extends Component {
 		)
     }
 
+    // This chart is about all expenses per month
+    renderChartMonthly() {
+        const expenses = [ ...this.state.expenses ]
+        const dateToMonth = { '01': 'Jan', '02': 'Fev', '03': 'Mar', '04': 'Abr', '05': 'Mai', '06': 'Jun',
+                                '07': 'Jul', '08': 'Ago', '09': 'Set', '10': 'Out', '11': 'Nov', '12': 'Dez'}
+        let dates = []
+        let values = []
+        
+        let pos
+
+        expenses.map(expense => {
+            if(expense.expense_date) {
+                let date = expense.expense_date.split('-')
+                pos = dates.indexOf((dateToMonth[date[1]].concat(" ")).concat(date[0]))
+                if(pos !== -1) {
+                    values[pos] = values[pos] + expense.expense_value
+                } else {
+                    dates.push((dateToMonth[date[1]].concat(" ")).concat(date[0]))
+                    values.push(expense.expense_value)
+                }
+            }
+        })
+
+        const data = {
+            labels: dates,
+            datasets: [
+              {
+                label: 'Todas as despesas por mês',
+                backgroundColor: 'rgba(255,99,132,0.2)',
+                borderColor: 'rgba(255,99,132,1)',
+                borderWidth: 1,
+                hoverBackgroundColor: 'rgba(255,99,132,0.4)',
+                hoverBorderColor: 'rgba(255,99,132,1)',
+                cubicInterpolationMode: 'monotone',
+                data: values
+              }
+            ]
+          };
+        return (
+			<div >
+				<hr />
+				<Line data={data} width={"50%"} height={"15%"} />
+                <br/>
+			</div>
+		)
+    }
+
     renderWelcomeMensage() {
         const name = localStorage.getItem('name')
         return (
@@ -130,6 +173,15 @@ export default class AddExpense extends Component {
     renderExpenses() {
         let i = 0
         const expenses = [ ...this.state.expenses ]
+
+        expenses.sort( function(a, b) { 
+            const aDate = new Date(a.expense_date)
+            const bDate = new Date(b.expense_date)
+            if(aDate > bDate) return -1
+            if(aDate < bDate) return 1
+            return 0
+        } )
+
         return expenses.map(expense => {
             i += 1
             return (
@@ -150,7 +202,7 @@ export default class AddExpense extends Component {
                             <h5><strong>Data:</strong></h5>
                         </div>
                         <div className="col-2">
-                            <button type="button" class="btn btn-primary">Subgastos</button>
+                            <button type="button" className="btn btn-primary">Subgastos</button>
                         </div>
                     </div>      
                     <div className="row">
@@ -210,7 +262,7 @@ export default class AddExpense extends Component {
                                     <h6>{(item.item_value * item.item_amount).toFixed(2)}</h6>
                                 </div>
                             </div>
-                            <div class="offset-1 col-10">
+                            <div className="offset-1 col-10">
                                 <hr/>
                              </div>
                              
@@ -233,7 +285,7 @@ export default class AddExpense extends Component {
                             {this.renderWelcomeMensage()}
                         </div>
                         <div className="container-fluid">
-                            {this.renderChartTest()}
+                            {this.renderChartMonthly()}
                         </div>
                         <div className="container-fluid">
                             {this.renderExpenses()}
