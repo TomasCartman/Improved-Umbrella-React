@@ -127,7 +127,7 @@ export default class AddExpense extends Component {
                 let date = expense.expense_date.split('-')
                 pos = dates.indexOf((dateToMonth[date[1]].concat(" ")).concat(date[0]))
                 if(pos !== -1) {
-                    values[pos] = values[pos] + expense.expense_value
+                    values[pos] = (Number(values[pos]) + expense.expense_value).toFixed(2).toString()
                 } else {
                     dates.push((dateToMonth[date[1]].concat(" ")).concat(date[0]))
                     values.push(expense.expense_value)
