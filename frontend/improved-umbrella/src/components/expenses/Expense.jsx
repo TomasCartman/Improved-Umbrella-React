@@ -9,16 +9,6 @@ import { Line } from 'react-chartjs-2';
 
 //import './Expense.css'
 
-const expensesExemple = [{"id": 2, "username": "TomasCartman", "expense_type": 0, "expense_name": "Supermercado", "expense_value": 177.28, "expense_localization": "Maxxi Atacado", "expense_date": "2020-04-17"},
-                        {"id": 3, "username": "TomasCartman", "expense_type": 0, "expense_name": "Padaria", "expense_value": 6, "expense_localization": "Rios Delicatessen", "expense_date": "2020-03-22"}]
-
-const itemsExemple = [{"id":1,"expense_id":2,"item_name":"Leite","item_value":3.04,"item_amount":5},
-                    {"id":2,"expense_id":2,"item_name":"Suco","item_value":3.27,"item_amount":3},
-                    {"id":3,"expense_id":2,"item_name":"Doritos sweet chili","item_value":2.89,"item_amount":2},
-                    {"id":4,"expense_id":3,"item_name":"Doritos 167g","item_value":7.09,"item_amount":1},
-                    {"id":5,"expense_id":3,"item_name":"Caixa de barra de cereal","item_value":21.38,"item_amount":1},
-                    {"id":6,"expense_id":3,"item_name":"Caixa de cereal crunch","item_value":11.89,"item_amount":3}]
-
 
 const headerProps = {
     icon: 'umbrella',
@@ -46,7 +36,6 @@ export default class AddExpense extends Component {
             result.data.map(res => {
                 if(res.expense_date) {
                     res.expense_date = res.expense_date.substring(0, 10)
-                    // SEPARAR A DATA CERTINHO PARA O PADRÃO BR
                 }
             })
             this.setState({ expenses: result.data })
@@ -67,6 +56,14 @@ export default class AddExpense extends Component {
             })
             this.setState({ items })
         }).catch(err => console.log(err))
+    }
+
+    dateToBrazilianDate(string_date) {
+        let year = string_date.substring(0, 4)
+        let month = string_date.substring(5, 7)
+        let day = string_date.substring(8, 10)
+        let brazilian_date = day + "-" + month + "-" + year
+        return brazilian_date
     }
 
     // This chart is about all expenses per day
@@ -202,7 +199,7 @@ export default class AddExpense extends Component {
                             <h5><strong>Data:</strong></h5>
                         </div>
                         <div className="col-2">
-                            <button type="button" className="btn btn-primary">Subgastos</button>
+                            <button type="button" className="btn btn-primary" >Subgastos</button>
                         </div>
                     </div>      
                     <div className="row">
@@ -216,7 +213,7 @@ export default class AddExpense extends Component {
                             <h5>{expense.expense_localization}</h5>
                         </div>
                         <div className="col-2">
-                            <h5>{expense.expense_date}</h5>
+                            <h5>{this.dateToBrazilianDate(expense.expense_date)}</h5>
                         </div>
                     </div>
                     {this.renderSubexpenses(expense.id)}  
